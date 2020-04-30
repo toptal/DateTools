@@ -65,11 +65,10 @@ public extension Date {
         let unitFlags = Set<Calendar.Component>([.second,.minute,.hour,.day,.weekOfYear,.month,.year])
         let earliest = self.earlierDate(date)
         let latest = (earliest == self) ? date : self //Should be triple equals, but not extended to Date at this time
-        
-        
+
         let components = calendar.dateComponents(unitFlags, from: earliest, to: latest)
-        let yesterday = date.subtract(1.days)
-        let isYesterday = yesterday.day == self.day
+        let yesterday = latest.subtract(1.days)
+        let isYesterday = yesterday.day == earliest.day
         
         //Not Yet Implemented/Optional
         //The following strings are present in the translation files but lack logic as of 2014.04.05
@@ -111,6 +110,12 @@ public extension Date {
         }
         else if (components.day! >= 2) {
             return self.logicalLocalizedStringFromFormat(format: "%%d %@days ago", value: components.day!)
+        }
+        else if (components.day! >= 1) {
+            if (isYesterday && !numericDates) {
+                return DateToolsLocalizedStrings("Yesterday")
+            }
+            return DateToolsLocalizedStrings("1 day ago")
         }
         else if (isYesterday) {
             if (numericDates) {
