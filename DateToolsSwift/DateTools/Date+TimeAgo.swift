@@ -60,7 +60,7 @@ public extension Date {
         return self.shortTimeAgo(since:Date())
     }
     
-    func timeAgo(since date:Date, numericDates: Bool = false, numericTimes: Bool = false) -> String {
+    func timeAgo(since date:Date, numericDates: Bool = false, numericTimes: Bool = false, showSeconds: Bool = true) -> String {
         let calendar = NSCalendar.current
         let unitFlags = Set<Calendar.Component>([.second,.minute,.hour,.day,.weekOfYear,.month,.year])
         let earliest = self.earlierDate(date)
@@ -141,12 +141,12 @@ public extension Date {
             
             return DateToolsLocalizedStrings("A minute ago");
         }
-        else if (components.second! >= 3) {
+        else if (components.second! >= 3 && showSeconds) {
             return self.logicalLocalizedStringFromFormat(format: "%%d %@seconds ago", value: components.second!)
         }
         else {
             
-            if (numericTimes) {
+            if (numericTimes && showSeconds) {
                 return DateToolsLocalizedStrings("1 second ago");
             }
             
